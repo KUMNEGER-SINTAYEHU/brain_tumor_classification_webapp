@@ -8,8 +8,7 @@ class BraintumorclassifierApplicationTests {
 
     @Test
     void contextLoads() {
-        // This test just verifies that the Spring context loads
-        // You can add more specific tests here as needed
+        // This test is to verify the Spring context loads
     }
 
 }
