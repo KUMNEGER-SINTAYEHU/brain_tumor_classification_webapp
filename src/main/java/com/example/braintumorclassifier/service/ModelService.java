@@ -27,7 +27,7 @@ public class ModelService {
         try {
             this.environment = OrtEnvironment.getEnvironment();
             
-            // Adjust this path based on where 'brain_tumor_model1.onnx' is located in resources
+            
             String resourcePath = "/models/brain_tumor_model1.onnx";
             InputStream inputStream = ModelService.class.getResourceAsStream(resourcePath);
             if (inputStream == null) {
@@ -59,7 +59,7 @@ public class ModelService {
         Map<String, Float> resultMap = new HashMap<>();
 
         for (int i = 0; i < labels.length; i++) {
-            resultMap.put(labels[i], probabilities[i] * 100); // Convert to percentage
+            resultMap.put(labels[i], probabilities[i] * 100);
         }
 
         return resultMap;
