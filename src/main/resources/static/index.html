@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Tumor Classifier</title>
+</head>
+<body>
+    <h1>Brain Tumor Classifier</h1>
+    
+    <form id="uploadForm">
+        <input type="file" id="image" accept="image/*" required />
+        <button type="submit">Classify</button>
+    </form>
+
+    <p id="loadingMessage" style="display:none;">Processing...</p>
+    
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('image');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Please select an image file.');
+                return;
+            }
+
+            document.getElementById('loadingMessage').style.display = 'block';
+            document.getElementById('result').innerHTML = '';
+
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                let resultHTML = '<h2>Prediction Results:</h2>';
+                for (const [type, probability] of Object.entries(data.data || {})) {
+                    resultHTML += `<p>${type}: ${probability.toFixed(2)}%</p>`;
+                }
+                
+                document.getElementById('result').innerHTML = resultHTML;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = `<p class="error">Prediction failed: ${error.message}</p>`;
+            } finally {
+                document.getElementById('loadingMessage').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
